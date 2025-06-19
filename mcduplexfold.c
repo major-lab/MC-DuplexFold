@@ -1,6 +1,6 @@
 /****************************************************************************
- * MC-DuplexFold v 1.1
- * Copyright 2024 Simon Chasles <simon.chasles@umontreal.ca>
+ * MC-DuplexFold (mcdf) v 1.1
+ * Copyright 2025 Simon Chasles <simon.chasles@umontreal.ca>
  * 
  * For basic compilation:   gcc -o mcdf -fopenmp mcduplexfold.c -lm
  * For basic execution:     ./mcdf -s {first RNA sequence} -t {second RNA sequence}
@@ -8,6 +8,7 @@
  * Sirt-1:miR34a example:   ./mcdf -s ACACCCAGCUAGGACCAUUACUGCCA -t UGGCAGUGUCUUAGCUGGUUGU -f 5
  * HNF4a:mir34a example:    ./mcdf -s aacauggccuaagggccacaucccacugcca -t UGGCAGUGUCUUAGCUGGUUGU -p 1
  * For help:                ./mcdf -h
+ * Note: mcff must be executable in the current directory.
  ****************************************************************************/
 
 #include <omp.h>
@@ -549,7 +550,6 @@ int determine_chosen_prime(int n, unsigned short int H_str[mcff_structure_nb][n+
 		for (int k = 0; k < mcff_structure_nb; k++) {
 			h = hash_H(n, H_str[k], prime);
 			if (hash_inverse[h] > -1) {
-				//printf("Structure %d entre en collision à %d\n", k, h);
 				collision = 1;
 				break;
 			} else {
@@ -720,7 +720,7 @@ double get_pairing_probability(int n, int m, int i, int j, int s[n], int t[m], i
     return 0.5;
 }
 
-int simulate(int job_nb, int sim_nb, int n, int m, int chosen_prime, int iteration_nb, int bp_nb, int s[n], int t[m], int init_S[n], int H_bpss[max_job_nb][n][m], unsigned short int H_strs[max_job_nb][mcff_structure_nb][n+1], int H_strfs[max_job_nb][mcff_structure_nb], int transition_nbs[max_job_nb]) {
+void simulate(int job_nb, int sim_nb, int n, int m, int chosen_prime, int iteration_nb, int bp_nb, int s[n], int t[m], int init_S[n], int H_bpss[max_job_nb][n][m], unsigned short int H_strs[max_job_nb][mcff_structure_nb][n+1], int H_strfs[max_job_nb][mcff_structure_nb], int transition_nbs[max_job_nb]) {
 	const int64_t m1 = INT64_C(4294967087);
 	const int64_t m2 = INT64_C(4294944443);
 	const int32_t a12 = INT32_C(1403580);
@@ -853,7 +853,7 @@ int simulate(int job_nb, int sim_nb, int n, int m, int chosen_prime, int iterati
 	transition_nbs[job_nb] = transition_nb;
 }
 
-int quick_simulate(int job_nb, int sim_nb, int n, int m, int iteration_nb, int bp_nb, int s[n], int t[m], int init_S[n], int H_bpss[max_job_nb][n][m], int transition_nbs[max_job_nb]) {
+void quick_simulate(int job_nb, int sim_nb, int n, int m, int iteration_nb, int bp_nb, int s[n], int t[m], int init_S[n], int H_bpss[max_job_nb][n][m], int transition_nbs[max_job_nb]) {
 	const int64_t m1 = INT64_C(4294967087);
 	const int64_t m2 = INT64_C(4294944443);
 	const int32_t a12 = INT32_C(1403580);
@@ -1097,6 +1097,8 @@ void print_help() {
 	printf("  -p\n");
 	printf("   Optional, boolean, default=0\n");
 	printf("   If 1, prints the base pair frequency matrix.\n");
+	printf("  -h\n");
+	printf("   Display the usage details message.\n");
 }
 
 int main(int argc, char *argv[]) {
