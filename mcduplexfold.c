@@ -1039,7 +1039,7 @@ void dynamic_fold(int n, int m, int total_measure_nb, int H_bps[n][m], int final
 	}
 }
 
-double compute_entropy(int n, int total_measure_nb, int H_strf[mcff_structure_nb]) {
+double compute_entropy(int total_measure_nb, int H_strf[mcff_structure_nb]) {
 	double entropy = 0.0;
 	double probability = 0.0;
 	for (int k = 0; k < entropy_structure_nb; k++) {
@@ -1096,7 +1096,7 @@ void print_help() {
 	printf("   Specifies the seed for the random number generation.\n\n");
 	printf("  -p\n");
 	printf("   Optional, boolean, default=0\n");
-	printf("   If 1, prints the base pair frequency matrix.\n");
+	printf("   If 1, prints the base pair frequency matrix.\n\n");
 	printf("  -h\n");
 	printf("   Display the usage details message.\n");
 }
@@ -1414,7 +1414,7 @@ int main(int argc, char *argv[]) {
 		}
 		other_percentage = 100 * (1.0 - ((float) total_structures_noted / (float) total_measure_nb));
 		printf("Other structures: %.2f%%\n", other_percentage);
-		entropy = compute_entropy(n, total_structures_noted, H_strf);
+		entropy = compute_entropy(total_measure_nb, H_strf);
 		printf("Estimated entropy over %d structures: %f\n", mcff_structure_nb, entropy);
 		printf("Transition frequency: %f\n", transition_frequency);
 	}
